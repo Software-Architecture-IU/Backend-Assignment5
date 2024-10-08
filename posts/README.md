@@ -1,5 +1,34 @@
-Posts
-GET /posts
+# Users
+## POST /register
+```typescript
+Query:
+{
+    username: string
+}
+```
+
+```typescript
+Response:
+200: {username: string}
+400: {detail: string}
+```
+
+## POST /auth
+```typescript
+Query:
+{
+    username: string
+}
+```
+
+```typescript
+Response:
+200: {}
+400: {detail: string}
+```
+
+# Posts
+## GET /posts
 ```typescript
 Query: 
 {
@@ -22,7 +51,7 @@ Response:
 Если offset не задан, то просто вернуть последние 10 постов.
 
 
-POST /posts
+## POST /posts
 ```typescript
 Query: 
 {
