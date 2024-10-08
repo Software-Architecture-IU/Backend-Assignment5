@@ -1,15 +1,41 @@
-from typing import Annotated
+from typing import Annotated, Optional
+from fastapi import APIRouter, HTTPException
 
-from fastapi import APIRouter
+import posts.schemas as schemas
+import posts.types as types
 
 router = APIRouter(prefix="/posts")
 
+# (username, content)
+posts: list[types.Post] = [] 
 
 @router.get("/")
-def get_posts():
-    pass
+def get_posts_by_offset(username: str, offset: Optional[int] = None) -> list[schemas.Post]:
+    if not offset:
+        offset = len(posts) - 10
+    elif offset < 0 or offset > len(posts):
+        return HTTPException(400, "ERR_INVALID_OFFSET")
 
+    start_idx = max(offset, 0)
+    end_idx = min(offset+10, len(posts))
+
+    return [schemas.Post(id=id, 
+                         username=post.username, 
+                         content=post.content) for id, post in zip(range(start_idx, end_idx), posts[start_idx:end_idx])]
+    
 
 @router.post("/")
-def get_room():
-    pass
+def create_post(username: str, body: schemas.CreatePostBody) -> schemas.Post:
+    post = types.Post(username=username, content=body.content)
+    id_of_post = len(posts)
+    posts.append(post)
+    return schemas.Post(id=id_of_post, username=username, content=body.content)
+
+
+@router.get("/{id}")
+def get_post_by_id(id: int, username: str) -> schemas.Post:
+    if not (0 < id < len(posts)):
+        return HTTPException(400, "ERR_ID_OUT_OF_RANGE")
+
+    post = posts[id]
+    return schemas.Post(id=id, username=username, content=post.content)
