@@ -1,31 +1,25 @@
 from typing import Annotated, Optional
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 import posts.schemas as schemas
 import posts.types as types
+import posts.validators as validators
+from posts.database import posts
 
 router = APIRouter(prefix="/posts")
 
-# (username, content)
-posts: list[types.Post] = [] 
-
 @router.get("/")
-def get_posts_by_offset(username: str, offset: Optional[int] = None) -> list[schemas.Post]:
-    if not offset:
-        offset = len(posts) - 10
-    elif offset < 0 or offset > len(posts):
-        return HTTPException(400, "ERR_INVALID_OFFSET")
-
+def get_posts_by_offset(username: str = Depends(validators.check_user_auth), offset=Depends(validators.validate_offset)) -> list[schemas.Post]:
     start_idx = max(offset, 0)
     end_idx = min(offset+10, len(posts))
 
-    return [schemas.Post(id=id, 
-                         username=post.username, 
+    return [schemas.Post(id=id,
+                         username=post.username,
                          content=post.content) for id, post in zip(range(start_idx, end_idx), posts[start_idx:end_idx])]
-    
+
 
 @router.post("/")
-def create_post(username: str, body: schemas.CreatePostBody) -> schemas.Post:
+def create_post(body: schemas.CreatePostBody, username: str = Depends(validators.check_user_auth)) -> schemas.Post:
     post = types.Post(username=username, content=body.content)
     id_of_post = len(posts)
     posts.append(post)
@@ -33,7 +27,7 @@ def create_post(username: str, body: schemas.CreatePostBody) -> schemas.Post:
 
 
 @router.get("/{id}")
-def get_post_by_id(id: int, username: str) -> schemas.Post:
+def get_post_by_id(id: int, username: str = Depends(validators.check_user_auth)) -> schemas.Post:
     if not (0 < id < len(posts)):
         return HTTPException(400, "ERR_ID_OUT_OF_RANGE")
 
