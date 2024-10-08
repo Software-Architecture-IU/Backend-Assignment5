@@ -29,7 +29,7 @@ def create_post(body: schemas.CreatePostBody, username: str = Depends(validators
 @router.get("/{id}")
 def get_post_by_id(id: int, username: str = Depends(validators.check_user_auth)) -> schemas.Post:
     if not (0 < id < len(posts)):
-        return HTTPException(400, "ERR_ID_OUT_OF_RANGE")
+        raise HTTPException(400, "ERR_ID_OUT_OF_RANGE")
 
     post = posts[id]
     return schemas.Post(id=id, username=username, content=post.content)
