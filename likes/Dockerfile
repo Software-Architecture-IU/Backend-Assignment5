@@ -1,12 +1,19 @@
 FROM python:3.10
 
-WORKDIR /app
+WORKDIR /likes
 
 # Copy requirements.txt and sources
 COPY requirements.txt .
-COPY src ./src
+COPY . /likes
 
-# Install python libs
+# Set the Python path to the app directory
+ENV PYTHONPATH=/
+
+# Install python libraries
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "80"]
+# Expose the port the app runs on
+EXPOSE 5888
+
+# Run the FastAPI app using uvicorn
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5888"]

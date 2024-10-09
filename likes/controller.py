@@ -1,11 +1,11 @@
 import requests
 from fastapi import APIRouter, Depends, HTTPException
 
-import likes.src.schemas
-import likes.src.validators as validators
-from likes.src.database import likes
-from likes.src.schemas import GetLikesResponse, GetLikesRequest, PostLikeRequest
-from likes.src.types import Likes
+import likes.schemas
+import likes.validators as validators
+from likes.database import likes
+from likes.schemas import GetLikesResponse, GetLikesRequest, PostLikeRequest
+from likes.types import Likes
 
 router = APIRouter(prefix="")
 

@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  users:
+    build:
+      context: ./users
+      dockerfile: Dockerfile
+    ports:
+      - "8999:8999"
+    networks:
+      - microservices-net
+
+  likes:
+    build:
+      context: ./likes
+      dockerfile: Dockerfile
+    ports:
+      - "5888:5888"
+    networks:
+      - microservices-net
+    depends_on:
+      - posts
+
+
+  posts:
+    build:
+      context: ./posts
+      dockerfile: Dockerfile
+    ports:
+      - "8043:8043"
+    networks:
+      - microservices-net
+
+
+networks:
+  microservices-net:
+    driver: bridge

@@ -1,3 +1,3 @@
-from likes.src import types
+from likes import types
 
 likes: list[types.Likes] = []

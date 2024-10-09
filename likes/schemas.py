@@ -2,7 +2,7 @@ from typing import List
 
 from pydantic import BaseModel
 
-from likes.src.types import Likes
+from likes.types import Likes
 
 
 class GetLikesRequest(BaseModel):

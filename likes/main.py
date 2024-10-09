@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from likes.src.controller import router
+from likes.controller import router
 
 app = FastAPI()
 
