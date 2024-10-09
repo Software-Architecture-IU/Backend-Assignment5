@@ -43,7 +43,7 @@ def extract_existing(ids: GetLikesRequest, username: str) -> [int]:
 
 
 def is_exist(post_id: int, username: str) -> bool:
-    url = f'http://stress-testers.ru:8043/posts/{post_id}?username={username}'
+    url = f'http://posts:8043/posts/{post_id}?username={username}'
     return requests.get(url).status_code == 200
 
 
