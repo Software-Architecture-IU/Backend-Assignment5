@@ -18,7 +18,7 @@ def validate_offset(offset: Optional[int]=None) -> int:
 
 def check_user_auth(username: str) -> str:
     body = {'username': username}
-    url = "http://127.0.0.1:8999/auth"
+    url = "http://users:8999/auth"
     response = requests.post(url, json=body)
     if response.status_code == 200:
         return username
